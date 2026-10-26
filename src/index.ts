@@ -16,12 +16,17 @@ const app = express();
 
 app.set("trust proxy", 1);
 app.use(helmet());
-app.use(
-  cors({
-    origin: (process.env.FRONTEND_URL ?? "http://localhost:3000").split(","),
-    methods: ["GET", "POST"],
-  }),
-);
+// Orígenes que pueden llamar a la API: el portafolio publicado, el desarrollo local
+// y los que se agreguen en FRONTEND_URL (varios separados por coma).
+const allowedOrigins = [
+  "https://portafolio-frontend-lime.vercel.app",
+  "http://localhost:3000",
+  ...(process.env.FRONTEND_URL ?? "").split(","),
+]
+  .map((url) => url.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
+
+app.use(cors({ origin: allowedOrigins, methods: ["GET", "POST"] }));
 app.use(express.json({ limit: "10kb" }));
 
 app.get("/api/health", (_req, res) => {
