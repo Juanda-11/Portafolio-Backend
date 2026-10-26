@@ -16,4 +16,4 @@ npm run dev            # http://localhost:4000/api/health
 Si `RESEND_API_KEY` y `CONTACT_TO_EMAIL` no están definidos, `/api/contact` responde `503 email_not_configured` (no finge que envió el mensaje) y el frontend ofrece escribir por correo directamente.
 
 ## Desplegar en Vercel
-Importa este repositorio como proyecto nuevo. `vercel.json` y `api/index.ts` ya están listos. En *Settings → Environment Variables* agrega `FRONTEND_URL` (la URL del portafolio), `RESEND_API_KEY` y `CONTACT_TO_EMAIL`.
+Importa este repositorio como proyecto nuevo. Vercel detecta Express solo: usa `src/index.ts`, que exporta la aplicación por defecto. En *Settings → Environment Variables* agrega `FRONTEND_URL` (la URL del portafolio), `RESEND_API_KEY` y `CONTACT_TO_EMAIL`.
