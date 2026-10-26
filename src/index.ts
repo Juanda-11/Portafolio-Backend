@@ -26,7 +26,23 @@ const allowedOrigins = [
   .map((url) => url.trim().replace(/\/+$/, ""))
   .filter(Boolean);
 
-app.use(cors({ origin: allowedOrigins, methods: ["GET", "POST"] }));
+// Los dominios de vista previa y alias de Vercel de este proyecto (portafolio-frontend-…-juan-9a09.vercel.app).
+const vercelAliases = /^https:\/\/portafolio-frontend(-[a-z0-9]+)*-juan-9a09\.vercel\.app$/;
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Sin cabecera Origin (curl, servidores) no hay nada que bloquear.
+      if (!origin || allowedOrigins.includes(origin) || vercelAliases.test(origin)) {
+        callback(null, true);
+        return;
+      }
+      console.warn(`CORS: origen no permitido -> ${origin}`);
+      callback(null, false);
+    },
+    methods: ["GET", "POST"],
+  }),
+);
 app.use(express.json({ limit: "10kb" }));
 
 app.get("/api/health", (_req, res) => {
